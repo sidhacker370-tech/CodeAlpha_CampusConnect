@@ -29,7 +29,15 @@ const API = (() => {
         }
       });
 
-      const data = await response.json();
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // Render or proxy returned HTML error page (Status 502, 503, 500, etc.)
+        throw new Error(`Server offline or returned non-JSON error (Status ${response.status})`);
+      }
       
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
