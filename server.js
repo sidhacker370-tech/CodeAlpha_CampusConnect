@@ -56,3 +56,5 @@ app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
   console.log(`Open http://localhost:${PORT} in your web browser`);
 });
+
+module.exports = app;
