@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusConnect | Student Community Hub</title>
+  <!-- SEO tags -->
+  <meta name="description" content="A premium social platform for students to share resources, project updates, coding achievements, and earn badges.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  
+  <!-- Global Notification / Badge Alert -->
+  <div id="badge-alert-container" class="badge-alert-container hidden">
+    <!-- Dynamic notification items will render here -->
+  </div>
+
+  <div id="app" class="app-container">
+    
+    <!-- AUTHENTICATED LAYOUT CONTAINER -->
+    <div id="authenticated-layout" class="layout-grid hidden">
+      
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="brand-text">Campus<span class="text-accent">Connect</span></span>
+        </div>
+        
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-view="feed" id="nav-feed">
+            <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+            <span class="nav-label">Home Feed</span>
+          </a>
+          <a href="#" class="nav-item" data-view="explore" id="nav-explore">
+            <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+            <span class="nav-label">Explore Students</span>
+          </a>
+          <a href="#" class="nav-item" data-view="resources" id="nav-resources">
+            <span class="nav-icon"><i class="fa-solid fa-book-open"></i></span>
+            <span class="nav-label">Resources Hub</span>
+          </a>
+          <a href="#" class="nav-item" data-view="profile" id="nav-profile">
+            <span class="nav-icon"><i class="fa-solid fa-user"></i></span>
+            <span class="nav-label">My Profile</span>
+          </a>
+          <button class="nav-item btn-logout" id="btn-logout-sidebar">
+            <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+            <span class="nav-label">Logout</span>
+          </button>
+        </nav>
+        
+        <div class="sidebar-user-card" id="sidebar-user-card">
+          <!-- Dynamic sidebar user info -->
+        </div>
+      </aside>
+
+      <!-- MOBILE HEADER -->
+      <header class="mobile-header">
+        <button class="menu-toggle" id="mobile-menu-toggle">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="sidebar-brand">
+          <span class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="brand-text">Campus<span class="text-accent">Connect</span></span>
+        </div>
+        <div class="mobile-user-avatar" id="mobile-user-avatar-trigger">
+          <!-- Mini avatar -->
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT PANEL -->
+      <main class="main-content">
+        
+        <!-- Home Feed View -->
+        <section id="view-feed" class="app-view">
+          <div class="view-header">
+            <h1 class="view-title">Home Feed</h1>
+            <p class="view-subtitle">See what other students are coding, reading, and learning.</p>
+          </div>
+          
+          <!-- Create Post Card -->
+          <div class="create-post-card">
+            <form id="create-post-form">
+              <div class="form-row">
+                <img src="" alt="Avatar" class="avatar-sm user-avatar-placeholder">
+                <textarea id="post-content-input" placeholder="Share a study update, coding achievement, or resource..." required></textarea>
+              </div>
+              
+              <!-- Optional Links Panel (Accordion / Tabs) -->
+              <div class="post-attachments-section">
+                <button type="button" class="btn-attachment-toggle" id="btn-attachment-toggle">
+                  <i class="fa-solid fa-paperclip"></i> Add Resources / Links
+                </button>
+                <div class="attachments-fields hidden" id="attachments-fields">
+                  <div class="attachment-input-group">
+                    <span class="attachment-input-icon"><i class="fa-solid fa-file-pdf"></i></span>
+                    <input type="url" id="post-pdf-link" placeholder="PDF Notes URL (e.g. Google Drive link)">
+                  </div>
+                  <div class="attachment-input-group">
+                    <span class="attachment-input-icon"><i class="fa-brands fa-github"></i></span>
+                    <input type="url" id="post-github-repo" placeholder="GitHub Repository URL">
+                  </div>
+                  <div class="attachment-input-group">
+                    <span class="attachment-input-icon"><i class="fa-solid fa-link"></i></span>
+                    <input type="url" id="post-coding-resource" placeholder="Coding/External Resource URL">
+                  </div>
+                  <div class="attachment-input-group">
+                    <span class="attachment-input-icon"><i class="fa-solid fa-image"></i></span>
+                    <input type="url" id="post-image-url" placeholder="Optional Image URL">
+                  </div>
+                </div>
+              </div>
+
+              <div class="create-post-footer">
+                <span class="char-count" id="post-char-count">0/1000</span>
+                <button type="submit" class="btn btn-primary btn-submit-post">Post Update</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Feed Container -->
+          <div class="feed-container" id="feed-posts-list">
+            <div class="loading-state">
+              <i class="fa-solid fa-spinner fa-spin loading-spinner"></i>
+              <p>Loading posts...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Explore Students View -->
+        <section id="view-explore" class="app-view hidden">
+          <div class="view-header">
+            <h1 class="view-title">Explore Students</h1>
+            <p class="view-subtitle">Connect with other learners, view profiles, and check achievements.</p>
+          </div>
+          <div class="explore-grid" id="explore-users-list">
+            <!-- Dynamic Users -->
+          </div>
+        </section>
+
+        <!-- Resources Hub View -->
+        <section id="view-resources" class="app-view hidden">
+          <div class="view-header">
+            <h1 class="view-title">Resources Hub</h1>
+            <p class="view-subtitle">Access curated notes, GitHub repos, and useful articles shared by peers.</p>
+          </div>
+          <div class="resources-hub-grid" id="resources-hub-list">
+            <!-- Dynamic Resources -->
+          </div>
+        </section>
+
+        <!-- User Profile View -->
+        <section id="view-profile" class="app-view hidden">
+          <!-- Dynamic Profile details will load here -->
+        </section>
+
+        <!-- Post Details View -->
+        <section id="view-post-details" class="app-view hidden">
+          <div class="back-nav">
+            <button class="btn-back" id="btn-back-to-feed"><i class="fa-solid fa-arrow-left"></i> Back to feed</button>
+          </div>
+          <div id="post-detail-container">
+            <!-- Dynamic Single Post -->
+          </div>
+        </section>
+
+        <!-- Edit Profile View -->
+        <section id="view-edit-profile" class="app-view hidden">
+          <div class="view-header">
+            <h1 class="view-title">Edit Profile</h1>
+            <p class="view-subtitle">Customize your campus bio, skills, college name, and avatar.</p>
+          </div>
+          <div class="form-container-card">
+            <form id="edit-profile-form">
+              <div class="form-group">
+                <label for="edit-profile-name">Full Name</label>
+                <input type="text" id="edit-profile-name" required>
+              </div>
+              <div class="form-group">
+                <label for="edit-profile-college">College / University Name</label>
+                <input type="text" id="edit-profile-college" required>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">Select Avatar Preset</label>
+                <div class="avatar-presets-grid" id="avatar-presets-grid">
+                  <!-- Dynamic presets will render here -->
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-profile-avatar">Or Custom Profile Photo URL</label>
+                <input type="text" id="edit-profile-avatar" placeholder="https://example.com/your-photo.jpg">
+                <small class="form-hint">Paste a link to any online image or photo (e.g. from LinkedIn, GitHub, Imgur) to set it as your profile picture.</small>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">Or Upload Profile Photo</label>
+                <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.25rem;">
+                  <input type="file" id="edit-profile-file" accept="image/*" style="display: none;" />
+                  <button type="button" class="btn btn-secondary" id="btn-upload-file-trigger" style="margin-top: 0;"><i class="fa-solid fa-cloud-arrow-up"></i> Choose Image File</button>
+                  <span id="upload-file-name" style="font-size: 0.82rem; color: var(--color-text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 200px;">No file selected</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-profile-bio">Bio</label>
+                <textarea id="edit-profile-bio" maxlength="200" placeholder="Tell students about yourself..."></textarea>
+                <small class="form-hint" id="edit-bio-char-count">0/200</small>
+              </div>
+              <div class="form-group">
+                <label for="edit-profile-skills">Skills (Comma-separated)</label>
+                <input type="text" id="edit-profile-skills" placeholder="JavaScript, Python, React, Data Structures">
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-edit-profile">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- RIGHT WIDGETS BAR -->
+      <aside class="right-panel">
+        <!-- Profile Widget -->
+        <div class="widget-card user-quick-widget" id="user-quick-widget">
+          <!-- Dynamic info -->
+        </div>
+
+        <!-- Invite Classmates Widget -->
+        <div class="widget-card invite-widget" id="invite-widget">
+          <h3 class="widget-title">Invite Classmates <i class="fa-solid fa-paper-plane" style="color: var(--color-accent);"></i></h3>
+          <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem; line-height: 1.4;">
+            Share CampusConnect with fellow student developers on your campus!
+          </p>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label style="font-size: 0.7rem; color: var(--color-text-main); font-weight: 600;">Invite Link</label>
+            <div style="display: flex; gap: 0.5rem; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); border-radius: var(--border-radius-sm); padding: 0.25rem 0.5rem; align-items: center;">
+              <input type="text" id="invite-share-link" readonly value="" style="background: transparent; border: none; outline: none; font-size: 0.75rem; flex-grow: 1; color: var(--color-text-muted); text-overflow: ellipsis; min-width: 0; padding: 0.25rem;" />
+              <button id="btn-copy-invite" title="Copy link" style="background: transparent; border: none; cursor: pointer; color: var(--color-accent); font-size: 0.85rem; padding: 0.25rem;"><i class="fa-solid fa-copy"></i></button>
+            </div>
+          </div>
+          <form id="invite-email-form">
+            <div class="form-group">
+              <label for="invite-email-input" style="font-size: 0.7rem; color: var(--color-text-main); font-weight: 600;">Email Invitation</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="email" id="invite-email-input" placeholder="peer@college.edu" required style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); border-radius: var(--border-radius-sm); padding: 0.45rem 0.5rem; font-size: 0.8rem; outline: none; flex-grow: 1; min-width: 0; color: #fff;" />
+                <button type="submit" class="btn btn-primary" style="padding: 0.45rem 0.75rem; font-size: 0.8rem;"><i class="fa-solid fa-envelope"></i> Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Badges Showcase Widget -->
+        <div class="widget-card badge-showcase-widget">
+          <h3 class="widget-title">Achievements Badge Rules</h3>
+          <ul class="badge-rules-list">
+            <li>
+              <div class="rule-badge-icon first-post-badge"><i class="fa-solid fa-award"></i></div>
+              <div class="rule-badge-info">
+                <h4>First Post</h4>
+                <p>Awarded on your first community post.</p>
+              </div>
+            </li>
+            <li>
+              <div class="rule-badge-icon resource-guru-badge"><i class="fa-solid fa-book"></i></div>
+              <div class="rule-badge-info">
+                <h4>Resource Guru</h4>
+                <p>Share 3+ resource attachments (PDF/Git/Link).</p>
+              </div>
+            </li>
+            <li>
+              <div class="rule-badge-icon ten-likes-badge"><i class="fa-solid fa-heart"></i></div>
+              <div class="rule-badge-info">
+                <h4>10 Likes Received</h4>
+                <p>Receive 10+ likes across all your posts.</p>
+              </div>
+            </li>
+            <li>
+              <div class="rule-badge-icon top-contributor-badge"><i class="fa-solid fa-star"></i></div>
+              <div class="rule-badge-info">
+                <h4>Top Contributor</h4>
+                <p>Post 5+ times and write 10+ comments.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- UNAUTHENTICATED LAYOUT CONTAINER -->
+    <div id="unauthenticated-layout" class="auth-wrapper">
+      
+      <!-- LOGIN VIEW -->
+      <div id="view-login" class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h2>Welcome back!</h2>
+          <p>Login to your CampusConnect account</p>
+        </div>
+        
+        <div class="alert alert-error hidden" id="login-alert-error"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+              <input type="email" id="login-email" placeholder="you@college.edu" required autocomplete="username">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>New to the platform? <a href="#" id="link-goto-register">Create an account</a></p>
+        </div>
+      </div>
+
+      <!-- REGISTER VIEW -->
+      <div id="view-register" class="auth-card hidden">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h2>Join CampusConnect</h2>
+          <p>Create your student developer profile today</p>
+        </div>
+        
+        <div class="alert alert-error hidden" id="register-alert-error"></div>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-user"></i></span>
+              <input type="text" id="register-name" placeholder="John Doe" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-email">College Email Address</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+              <input type="email" id="register-email" placeholder="johndoe@college.edu" required autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-college">College / University Name</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-school"></i></span>
+              <input type="text" id="register-college" placeholder="Stanford University" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <div class="input-with-icon">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="register-password" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">Register Account</button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>Already have an account? <a href="#" id="link-goto-login">Sign In</a></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MOBILE NAVIGATION (FOOTER BAR) -->
+    <nav class="mobile-nav-bar hidden" id="mobile-nav-bar">
+      <a href="#" class="mobile-nav-item active" data-view="feed" id="mobile-nav-feed">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="mobile-nav-item" data-view="explore" id="mobile-nav-explore">
+        <i class="fa-solid fa-users"></i>
+        <span>Explore</span>
+      </a>
+      <a href="#" class="mobile-nav-item" data-view="resources" id="mobile-nav-resources">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Resources</span>
+      </a>
+      <a href="#" class="mobile-nav-item" data-view="profile" id="mobile-nav-profile">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- JS Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
